@@ -1,3 +1,4 @@
+
 # Disable Password ssh
 FILE='/etc/ssh/sshd_config'
 LINE='PasswordAuthentication no'
@@ -24,7 +25,11 @@ else
 	echo "OS is not fedora or debian. Please restart the ssh daemon."
 fi
 
-packagesNeeded='nmap wget nano'
+# Install docker
+curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && rm get-docker.sh
+
+# Install packages
+packagesNeeded='nmap wget nano git docker-compose'
 if [ -x "$(command -v apk)" ];       then sudo apk add --no-cache $packagesNeeded
 elif [ -x "$(command -v apt-get)" ]; then 
 	sudo apt-get install -y $packagesNeeded
@@ -34,8 +39,8 @@ elif [ -x "$(command -v dnf)" ];     then
 	sudo dnf -y install $packagesNeeded dnf-automatic
 	sudo systemctl start --now dnf-automatic-install.timer
 	sudo systemctl enable --now dnf-automatic-install.timer
-	sudo dnf update -y
-	sudo dnf upgrade -y
+	sudo dnf -y update
+	sudo dnf -y upgrade
 elif [ -x "$(command -v zypper)" ];  then sudo zypper install $packagesNeeded
 else echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install: $packagesNeeded">&2; fi
 
