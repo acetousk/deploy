@@ -28,25 +28,28 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     network_mode: bridge
 
+  nextcloud:
+    image: nextcloud/all-in-one:latest
+    restart: unless-stopped
+    container_name: nextcloud-aio-mastercontainer
+		environment:
+      - VIRTUAL_HOST=cloud.dmichaeljones.com
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=11000
+      - LETSENCRYPT_HOST=cloud.dmichaeljones.com
+      - LETSENCRYPT_EMAIL=michael@dejc.com    
+      - APACHE_PORT=11000
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 8080:8080
+
 volumes:
   conf:
   vhost:
   html:
   certs:
   acme:
-  
-#  nextcloud:
-#    image: nextcloud/all-in-one:latest
-#    restart: unless-stopped
-#    container_name: nextcloud-aio-mastercontainer
-#    ports:
-#      - 80:80
-#      - 8080:8080
-#      - 8443:8443
-#    volumes:
-#      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
-#      - /var/run/docker.sock:/var/run/docker.sock:ro
-#volumes:
-#  nextcloud_aio_mastercontainer:
-#    name: nextcloud_aio_mastercontainer
-
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer
