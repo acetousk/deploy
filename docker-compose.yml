@@ -32,7 +32,7 @@ services:
     image: nextcloud/all-in-one:latest
     restart: unless-stopped
     container_name: nextcloud-aio-mastercontainer
-		environment:
+    environment:
       - VIRTUAL_HOST=cloud.dmichaeljones.com
       - VIRTUAL_NETWORK=nginx-proxy
       - VIRTUAL_PORT=11000
