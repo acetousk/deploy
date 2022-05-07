@@ -1,55 +1,29 @@
-version: '2'
-
 services:
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
-    container_name: nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
+  caddy:
+    image: caddy:alpine
+    restart: unless-stopped
+    container_name: caddy
     volumes:
-      - conf:/etc/nginx/conf.d
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    network_mode: bridge
-
-  acme-companion:
-    image: nginxproxy/acme-companion
-    container_name: nginx-proxy-acme
-    environment:
-      - DEFAULT_EMAIL=mail@yourdomain.tld
-    volumes_from:
-      - nginx-proxy
-    volumes:
-      - certs:/etc/nginx/certs:rw
-      - acme:/etc/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    network_mode: bridge
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./certs:/certs
+      - ./config:/config
+      - ./data:/data
+      - ./sites:/srv
+    network_mode: "host"
 
   nextcloud:
     image: nextcloud/all-in-one:latest
     restart: unless-stopped
     container_name: nextcloud-aio-mastercontainer
+    ports:
+      - "8080:8080"
     environment:
-      - VIRTUAL_HOST=cloud.dmichaeljones.com
-      - VIRTUAL_NETWORK=nginx-proxy
-      - VIRTUAL_PORT=11000
-      - LETSENCRYPT_HOST=cloud.dmichaeljones.com
-      - LETSENCRYPT_EMAIL=michael@dejc.com    
       - APACHE_PORT=11000
     volumes:
       - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - 8080:8080
+    depends_on:
+      - caddy
 
 volumes:
-  conf:
-  vhost:
-  html:
-  certs:
-  acme:
   nextcloud_aio_mastercontainer:
-    name: nextcloud_aio_mastercontainer

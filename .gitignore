@@ -1,0 +1,10 @@
+# intellij
+.idea
+
+# volumes
+certs/
+config/
+data/
+proxy/
+sites/
+
