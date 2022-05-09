@@ -9,7 +9,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-#      - HSTS=off
+      - HSTS=off
       - ENABLE_IPV6=true
     labels:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
@@ -24,8 +24,8 @@ services:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
     restart: unless-stopped
-#    environment:
-#      - DEFAULT_EMAIL=michael@dejc.com
+    environment:
+      - DEFAULT_EMAIL=michael@dejc.com
     volumes_from:
       - nginx-proxy
     volumes:
@@ -37,14 +37,14 @@ services:
     image: nextcloud/all-in-one:latest
     restart: unless-stopped
     container_name: nextcloud-aio-mastercontainer
-#    expose:
-#      - "8080"
+    expose:
+      - "8080"
     ports:
       - "8080:8080"
     environment:
       - APACHE_PORT=11000
-      - LETSENCRYPT_HOST=cloud.acetousk.com
-      - VIRTUAL_HOST=cloud.acetousk.com
+      - LETSENCRYPT_HOST=cloud.dmichaeljones.com
+      - VIRTUAL_HOST=cloud.dmichaeljones.com
       - VIRTUAL_PORT=8080
       - VIRTUAL_PROTO=https
     volumes:
