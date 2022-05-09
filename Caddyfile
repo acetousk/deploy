@@ -2,3 +2,10 @@ https://cloud.acetousk.com:443 {
     header Strict-Transport-Security max-age=31536000;
     reverse_proxy localhost:11000
 }
+https://aio.cloud.acetousk.com:8443 {
+    reverse_proxy https://localhost:8080 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
